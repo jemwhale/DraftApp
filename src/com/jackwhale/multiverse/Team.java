@@ -1,3 +1,5 @@
+package com.jackwhale.multiverse;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -51,6 +53,13 @@ public class Team {
     //Get total number of teams
     public static void getTotalTeams(){
         System.out.println("Total Teams: " + totalTeams);
+    }
+
+    public static void listAll() {
+        for (int i = 0; i < allTeams.size(); i++){
+            League league = League.getLeagueByID(allTeams.get(i).leagueID);
+            System.out.println("-ID:   " + allTeams.get(i).id + " ----- " + allTeams.get(i).name + " ----- Owner: " + allTeams.get(i).owner + " ----- League: " + league.name + " ----- League ID: " + allTeams.get(i).leagueID);
+        }
     }
 
 

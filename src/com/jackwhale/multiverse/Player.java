@@ -1,11 +1,10 @@
+package com.jackwhale.multiverse;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player {
     static private int totalPlayers;
-
-//    static private Player playerArr[] = new Player[100];
-    //array list (add remove) .contains()
     private static ArrayList<Player> allPlayers = new ArrayList<Player>();
     private int id;
     public String name;
@@ -65,6 +64,12 @@ public class Player {
         return -1;
     }
 
+    public static void listAll() {
+        for (int i = 0; i < allPlayers.size(); i++){
+            System.out.println("-ID:   " + allPlayers.get(i).id + " ----- " + allPlayers.get(i).position + " " + allPlayers.get(i).team + " #" + allPlayers.get(i).number + " " + allPlayers.get(i).name);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,19 +102,7 @@ public class Player {
         System.out.println(" ");
     }
 
-    //Update player number
-
-    //Update player real team
-
-    //Update player position
-
-
-
-
-
-
-    // Queries with variables --------------------------------------------------------
-
+    //Get player details
 
 
 }

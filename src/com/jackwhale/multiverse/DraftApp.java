@@ -1,12 +1,9 @@
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.security.spec.ECField;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.awt.event.*;
+package com.jackwhale.multiverse;
 
-public class Main {
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class DraftApp {
     public static void main(String[] args) {
 
 //
@@ -58,15 +55,13 @@ public class Main {
                 readInputScannerOne(args);
                 }
             break;
-            case "SEARCH" : {
-                readInputScannerSearch(args);
-            }
-            break;
             case "DRAFT" : {
                 readInputScannerDraft(args);
             }
             break;
             case "Q" : {
+                System.out.println("Thanks for using the Draft App!");
+                System.out.println("APP NOW TERMINATING");
                 System.exit(0);
             }
             break;
@@ -108,10 +103,10 @@ public class Main {
 
             }
             break;
-            case "O" : {
-                readInputScannerCustomDraftOrder(args);
-            }
-            break;
+//            case "O" : {
+//                readInputScannerCustomDraftOrder(args);
+//            }
+//            break;
             case "Q" : {
                 readInputScanner(args);
             }
@@ -129,22 +124,13 @@ public class Main {
         System.out.println("DRAFT ACTIONS MENU");
         System.out.println(" ");
         int draftID = draft.getDraftID(draft);
-        System.out.println("You are now within draft ID: " + draftID);
+        League league = League.getLeagueByID(draft.leagueID);
+        System.out.println("You are within:");
+        System.out.println("Draft ID: " + draftID + " -League: " + league.name + " -League ID: " + league.id + " -Year: " + draft.year);
         System.out.println(" ");
             draft.onTheClock();
-            System.out.println(" ");
             System.out.println("(c) Please enter your input: ");
             String input1 = scanner.nextLine();
-
-
-//        System.out.println("DRAFT - to see the draft details");
-//        System.out.println("ALL - to see all previous picks up to the current");
-//        System.out.println("THEN - to see the previous pick");
-//        System.out.println("NOW - to see the current pick");
-//        System.out.println("NEXT - to see the next pick");
-//        System.out.println("ROUND - to see all picks from a specified round");
-//        System.out.println("ONE - to see a pick by ID");
-//        System.out.println("Q - To quit the process");
 
             switch (input1.toUpperCase()){
                 case "C": {
@@ -239,6 +225,11 @@ public class Main {
                     readInputScannerLiveDraft(args, draft);
                 }
                 break;
+                case "SEE" : {
+                    draft.printUpcomingPicks();
+                    readInputScannerLiveDraft(args, draft);
+                }
+                break;
                 case "THEN" : {
                     draft.getPreviousPick();
                     readInputScannerLiveDraft(args, draft);
@@ -266,10 +257,6 @@ public class Main {
                     }
                 }
                 break;
-                case "ONE" : {
-                    readInputScannerLiveDraft(args, draft);
-                }
-                break;
                 case "Q" : {
                     readInputScanner(args);
                 }
@@ -280,15 +267,48 @@ public class Main {
             }
     }
 
-
-
-    private static void readInputScannerCustomDraftOrder(String[] args) {
-    }
-
-    private static void readInputScannerSearch(String[] args) {
-    }
-
     private static void readInputScannerList(String[] args) {
+        System.out.println(" ");
+        System.out.println("LIST ALL");
+        System.out.println(" ");
+        Scanner scanner = new Scanner(new InputStreamReader(System.in));
+            System.out.println("(C) Enter type of Class to return: ");
+            String input1 = scanner.nextLine();
+            switch (input1.toUpperCase()){
+                case "C": {
+                    secondaryCommandsList();
+                    readInputScannerList(args);
+                }
+                break;
+                case "L": {
+                    League.listAll();
+                    readInputScannerList(args);
+                }
+                break;
+                case "T" : {
+                    Team.listAll();
+                    readInputScannerList(args);
+                }
+                break;
+                case "P" : {
+                    Player.listAll();
+                    readInputScannerList(args);
+                }
+                break;
+                case "D" : {
+                    Draft.listAll();
+                    readInputScannerList(args);
+                }
+                break;
+                case "Q" : {
+                    readInputScanner(args);
+                }
+                break;
+                default :
+                    invalidCommand(input1);
+                    readInputScannerList(args);
+            }
+
     }
 
     private static void readInputScannerNew(String[] args) {
@@ -320,6 +340,7 @@ public class Main {
                     League newLeague = new League(name, commish, noOfPLayers);
                     System.out.println(" ");
                     System.out.println("New team successfully created!");
+                    System.out.println("Take note of the ID!");
                     newLeague.getLeague();
                     readInputScanner(args);
                 }catch(Exception e){
@@ -331,6 +352,8 @@ public class Main {
             break;
             case "T" : {
                 System.out.println("ADDING NEW TEAM");
+                System.out.println("NOTE: New teams can only be assigned to an existing league.");
+                System.out.println(" ");
                 System.out.println("(i) Enter league id team belongs to:");
                 try{
                     int leagueID = scanner.nextInt();
@@ -345,6 +368,7 @@ public class Main {
                         String owner = scanner.nextLine();
                         Team newTeam = league.createNewTeam(name, owner);
                         System.out.println("New team successfully created!");
+                        System.out.println("Take note of the ID!");
                         newTeam.getTeam();
                         readInputScanner(args);
                     }
@@ -373,6 +397,7 @@ public class Main {
                     }else{
                         System.out.println(" ");
                         System.out.println("New player successfully created!");
+                        System.out.println("Take note of the ID!");
                         newPlayer.getPlayer();
                         readInputScanner(args);
                     }
@@ -384,6 +409,8 @@ public class Main {
             break;
             case "D" : {
                 System.out.println("ADDING NEW DRAFT");
+                System.out.println("NOTE: New drafts can only be assigned to an existing league.");
+                System.out.println(" ");
                 System.out.println("(i) Enter league id drafting:");
                 try{
                     int leagueID = scanner.nextInt();
@@ -436,12 +463,14 @@ public class Main {
             case "L" : {
                Draft newDraft = league.createNewDraft(year, "Linear");
                 System.out.println("New draft successfully created!");
+                System.out.println("Take note of the ID!");
                 newDraft.getDraft();
                 readInputScannerDraftOrder(args, newDraft);
             }
             case "S" : {
                 Draft newDraft = league.createNewDraft(year, "Snake");
                 System.out.println("New draft successfully created!");
+                System.out.println("Take note of the ID!");
                 newDraft.getDraft();
                 readInputScannerDraftOrder(args, newDraft);
             }
@@ -550,9 +579,8 @@ public class Main {
     static void mainCommandsList(){
         System.out.println(" ");
         System.out.println("NEW - To create a new league, Team, Player or Draft");
-//        System.out.println("LIST - To list all existing leagues, Teams, Players or Drafts");
+        System.out.println("LIST - To list all existing leagues, Teams, Players or Drafts");
         System.out.println("ONE - To return details of a known league, Team, Player or Draft by ID");
-//        System.out.println("SEARCH - To find a specific league, Team, Player or Draft by name");
         System.out.println("DRAFT - To start or continue a draft");
         System.out.println("Q - To exit the program");
         System.out.println(" ");
@@ -570,7 +598,7 @@ public class Main {
     static void draftCommandsList(){
         System.out.println(" ");
         System.out.println("E - to start or resume a draft");
-        System.out.println("O - to create a custom draft order");
+//        System.out.println("O - to create a custom draft order");
         System.out.println("Q - To quit the process");
         System.out.println(" ");
     }
@@ -580,13 +608,13 @@ public class Main {
         System.out.println(" ");
         System.out.println("PICK - to pick a player by ID");
         System.out.println("NEW - to pick a player that doesn't already exist on the app");
-        System.out.println("DRAFT - to see the draft details");
+        System.out.println("DRAFT - to see a summary of the draft details");
         System.out.println("ALL - to see all previous picks up to the current");
+        System.out.println("SEE - to see all upcoming picks");
         System.out.println("THEN - to see the previous pick");
         System.out.println("NOW - to see the current pick");
         System.out.println("NEXT - to see the next pick");
         System.out.println("ROUND - to see all picks from a specified round");
-        System.out.println("ONE - to see a pick by ID");
         System.out.println("Q - To quit the process");
         System.out.println(" ");
     }
@@ -624,9 +652,11 @@ public class Main {
         //Add some teams to that league
         Team team1 = league1.createNewTeam("Irritable Bowl Syndrome", "Jack Whale");
         Team team2 = league1.createNewTeam("Joe Buck Yourself", "Harris Todd");
+        Team team3 = league1.createNewTeam("Mixon It Up", "Craig Hall");
+        Team team4 = league1.createNewTeam("Saving Matt Ryan", "Rich Painter");
 
         //Create a draft for that league
-        Draft newDraft = league1.createNewDraft(2022, "Linear");
+        Draft newDraft = league1.createNewDraft(2022, "Snake");
 
         //Add some players
         Player player1 = new Player("Jonathan Taylor", "RB", "IND", 28);
@@ -635,26 +665,30 @@ public class Main {
         Player player4 = new Player("Davante Adams", "WR", "LV", 17);
         Player player5 = new Player("Deebo Samuel", "WR", "SF", 19);
         Player player6 = new Player("Mark Andrews", "TE", "BAL", 89);
+        Player player7 = new Player("Derek Carr", "QB", "LV", 4);
+        Player player8 = new Player("Dalvin Cook", "RB", "MIN", 4);
+        Player player9 = new Player("Justin Tucker", "K", "BAL", 9);
+        Player player10 = new Player("Buffalo Bills", "DEF", "BUF", 0);
+        Player player11 = new Player("Dallas Goedert", "TE", "PHI", 88);
+        Player player12 = new Player("DK Metcalf", "WR", "SEA", 14);
 
-//        Player.getTotalPlayers();
-//
-        newDraft.setDraftOrder(team1,0);
-        newDraft.setDraftOrder(team2,1);
+        newDraft.setDraftOrder(team2,0);
+        newDraft.setDraftOrder(team4,1);
+        newDraft.setDraftOrder(team1,3);
+        newDraft.setDraftOrder(team3,4);
         newDraft.fillDraftOrder();
 
         newDraft.pickPlayer(0);
         newDraft.pickPlayer(1);
         newDraft.pickPlayer(2);
         newDraft.pickPlayer(3);
-//        newDraft.pickPlayer(4);
 
         System.out.println(" ");
         System.out.println(" ");
         System.out.println("SEEDED:");
         System.out.println("ONE league (ID: 0)");
-        System.out.println("TWO teams (ID: 0-1)");
+        System.out.println("FOUR teams (ID: 0-3)");
         System.out.println("SIX PLayers teams (ID: 0-5)");
-        System.out.println("TWO teams (ID: 0-1)");
         System.out.println("ONE draft (in progress) (ID: 0)");
         System.out.println(" ");
         System.out.println(" ");
@@ -664,24 +698,5 @@ public class Main {
         System.out.println(" ");
 
     }
-
-
-
-
-
-    //Unimplemented Featured --------------------------------------------------------------------
-
-    // Validation on player positions
-    // Validation when picking draft orders from list of teams
-
-    //Validation on draft year
-    // Keepers
-    // Saving files
-    //Revert to a pick
-
-    //Get team form a year - default to current draft
-
-
-
 
 }

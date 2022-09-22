@@ -1,3 +1,5 @@
+package com.jackwhale.multiverse;
+
 import java.util.ArrayList;
 
 public class Draft {
@@ -66,6 +68,13 @@ public class Draft {
     //Get total number of drafts
     public static void getTotalDrafts(){
         System.out.println("Total Drafts: " + totalDrafts);
+    }
+
+    public static void listAll() {
+        for (int i = 0; i < allDrafts.size(); i++){
+            League league = League.getLeagueByID(allDrafts.get(i).leagueID);
+            System.out.println("-ID:   " + allDrafts.get(i).id + " ----- League: " + league.name + " ----- League ID: " + allDrafts.get(i).leagueID + " ----- Year: " + allDrafts.get(i).year);
+        }
     }
 
     // GET METHODS from variables --------------------------------------------------------
@@ -170,18 +179,28 @@ public class Draft {
     }
 
     public void getPicksByRound(int round){
-        if(round < 1 || round > rounds){
-            System.out.println("Invalid round - please choose between 1 and " + rounds);
-        }else{
-            int startingPick  = (round*teams)-teams;
-            System.out.println(" ");
-            System.out.println("ROUND " + round + "----");
-            System.out.println(" ");
-            for (int i = 0; i < teams; i ++){
-                System.out.println((i+startingPick) + " " + picksTeamsArr.get(i).name);
-                System.out.println(picksPlayersArr.get(i).position + " " + picksPlayersArr.get(i).team + " #" + picksPlayersArr.get(i).number + " " + picksPlayersArr.get(i).name);
+
+        if (currentPick != 1){
+            if(round < 1 || round > currentRound){
+                System.out.println("Invalid round - please choose between 1 and " + currentRound);
+            }else{
+                int startingPick  = (round*teams)-teams;
                 System.out.println(" ");
+                System.out.println("ROUND " + round + "----");
+                System.out.println(" ");
+
+                if (startingPick == currentPick - 1){
+                    System.out.println("No picks made in this round so far!");
+                }else{
+                    for (int i = startingPick; i < currentPick - 1; i ++){
+                        System.out.println((i + 1) + " " + picksTeamsArr.get(i).name);
+                        System.out.println(picksPlayersArr.get(i).position + " " + picksPlayersArr.get(i).team + " #" + picksPlayersArr.get(i).number + " " + picksPlayersArr.get(i).name);
+                        System.out.println(" ");
+                    }
+                }
             }
+        }else{
+            System.out.println("No result to show as draft not yet started!");
         }
     }
 
@@ -195,28 +214,34 @@ public class Draft {
 
         System.out.println(" ");
         if (!complete){
-            System.out.println("This draft has is still in progress!");
+            System.out.println("This draft is still in progress!");
             System.out.println("All picks so far: ");
         }else{
             System.out.println("This draft has concluded!");
             System.out.println("Draft results: ");
         }
-        System.out.println(" ");
-        for (int i = 0; i < currentPick; i ++){
-            dPick = i+1;
-            dRounds = dPick/dTeams;
-            dCurrentRound = (int) Math.ceil(dRounds);
-            if(dCurrentRound != storedRound){
-                storedRound = dCurrentRound;
-                System.out.println(" ");
-                System.out.println("ROUND " + dCurrentRound + "----");
+        if (currentPick == 1){
+            System.out.println(" ");
+            System.out.println("No picks made yet!");
+            System.out.println(" ");
+        }else{
+            System.out.println(" ");
+            for (int i = 0; i < currentPick - 1; i ++){
+                dPick = i+1;
+                dRounds = dPick/dTeams;
+                dCurrentRound = (int) Math.ceil(dRounds);
+                if(dCurrentRound != storedRound){
+                    storedRound = dCurrentRound;
+                    System.out.println(" ");
+                    System.out.println("ROUND " + dCurrentRound + "----");
+                    System.out.println(" ");
+                }
+                System.out.println((i+1) + " " + picksTeamsArr.get(i).name);
+                System.out.println(picksPlayersArr.get(i).position + " " + picksPlayersArr.get(i).team + " #" + picksPlayersArr.get(i).number + " " + picksPlayersArr.get(i).name);
                 System.out.println(" ");
             }
-            System.out.println((i+1) + " " + picksTeamsArr.get(i).name);
-            System.out.println(picksPlayersArr.get(i).position + " " + picksPlayersArr.get(i).team + " #" + picksPlayersArr.get(i).number + " " + picksPlayersArr.get(i).name);
             System.out.println(" ");
         }
-        System.out.println(" ");
     }
 
 
@@ -259,9 +284,6 @@ public class Draft {
         System.out.println(" ");
     }
 
-
-
-
     // Make pick
     public void pickPlayer(int playerID){
         if (!complete){
@@ -287,6 +309,43 @@ public class Draft {
         for (int i=0; i < teamOrderArr.size(); i++){
             Team team = teamOrderArr.get(i);
             team.resetTeam(this);
+        }
+    }
+
+    public void printUpcomingPicks() {
+        double dPick;
+        double dTeams = teams;
+        double dRounds;
+        double storedRound = 0;
+        double dCurrentRound;
+
+        System.out.println(" ");
+        if (!complete){
+            System.out.println("Upcoming picks:");
+            if(currentPick == totalPicks){
+                System.out.println(" ");
+                System.out.println("Last pick! No more upcoming picks.");
+                System.out.println(" ");
+            }else{
+                System.out.println(" ");
+                for (int i = currentPick - 1; i <= totalPicks - 1; i ++){
+                    dPick = i+1;
+                    dRounds = dPick/dTeams;
+                    dCurrentRound = (int) Math.ceil(dRounds);
+                    if(dCurrentRound != storedRound){
+                        storedRound = dCurrentRound;
+                        System.out.println(" ");
+                        System.out.println("ROUND " + dCurrentRound + "----");
+                        System.out.println(" ");
+                    }
+                    System.out.println((i+1) + " " + picksTeamsArr.get(i).name);
+                }
+                System.out.println(" ");
+            }
+
+        }else{
+            System.out.println("This draft has concluded! No upcoming picks!");
+
         }
     }
 

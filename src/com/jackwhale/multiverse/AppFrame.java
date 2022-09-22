@@ -1,3 +1,5 @@
+package com.jackwhale.multiverse;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,7 +12,7 @@ public class AppFrame extends JFrame {
     JPanel panelFooter= new PanelFooter();
     AppFrame(){
 
-        this.setTitle("Draft Board");
+        this.setTitle("com.jackwhale.multiverse.Draft Board");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setSize(1024, 768);

@@ -1,3 +1,5 @@
+package com.jackwhale.multiverse;
+
 import javax.swing.*;
 import java.awt.*;
 

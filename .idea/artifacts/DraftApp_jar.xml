@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="DraftApp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DraftApp_jar</output-path>
+    <root id="archive" name="DraftApp.jar">
+      <element id="module-output" name="DraftApp" />
+    </root>
+  </artifact>
+</component>

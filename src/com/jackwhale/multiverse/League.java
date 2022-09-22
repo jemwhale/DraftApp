@@ -1,12 +1,14 @@
+package com.jackwhale.multiverse;
+
 import java.util.ArrayList;
 
 public class League {
 
     static private int totalLeagues;
-    private String name;
+    public String name;
     private String commish;
     private int numberOfDrafts;
-    private int id;
+    public int id;
     private int noOfPlayers;
 
     public Draft latestDraft;
@@ -47,6 +49,12 @@ public class League {
             return league;
         }
 
+    }
+
+    public static void listAll() {
+        for (int i = 0; i < allLeagues.size(); i++){
+            System.out.println("-ID:   " + allLeagues.get(i).id + " ----- " + allLeagues.get(i).name + " ----- Commish: " + allLeagues.get(i).commish + " ----- Teams: " + allLeagues.get(i).teamsArr.size());
+        }
     }
 
     //Get latest Draft
